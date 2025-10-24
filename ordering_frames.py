@@ -4,6 +4,7 @@ import numpy as np
 from itertools import permutations
 import time
 from concurrent.futures import ProcessPoolExecutor
+from skimage.metrics import structural_similarity as ssim
 
 # Input and output folders
 FRAME_FOLDER = "extracted_frames"  # folder containing input frames
@@ -22,8 +23,20 @@ def load_frames():
     return frames, files
 
 def frame_difference(f1, f2):
-    """Compute difference between two frames"""
-    return np.sum(cv2.absdiff(f1, f2))
+    """Compute perceptual difference between two frames using SSIM"""
+    # Convert to grayscale
+    f1_gray = cv2.cvtColor(f1, cv2.COLOR_BGR2GRAY)
+    f2_gray = cv2.cvtColor(f2, cv2.COLOR_BGR2GRAY)
+    
+    # Resize to smaller dimensions for speed (optional)
+    f1_small = cv2.resize(f1_gray, (64, 64))
+    f2_small = cv2.resize(f2_gray, (64, 64))
+    
+    # Compute SSIM (1 = identical, 0 = very different)
+    score, _ = ssim(f1_small, f2_small, full=True)
+    
+    # Return difference (smaller = more similar)
+    return 1 - score
 
 def compute_score_for_perm(args):
     """Wrapper for parallel execution (args = (perm, frames))"""
@@ -51,9 +64,15 @@ def order_frames_greedy(frames):
 
     end_time = time.time()
     print(f"Time taken (greedy, {n} frames): {end_time - start_time:.4f} seconds")
-    return [frames[i] for i in ordered]
+    return [frames[i] for i in ordered][::-1]
 
 def save_ordered_frames(ordered_frames, original_files):
+    #clearing the output folder
+    for f in os.listdir(OUTPUT_FOLDER):
+        file_path = os.path.join(OUTPUT_FOLDER, f)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
     """Save the frames in order into the output folder"""
     for idx, frame in enumerate(ordered_frames):
         # Keep original extension
