@@ -4,9 +4,11 @@ import os
 video_path = "C:\\Users\\lenovo\\OneDrive\\Desktop\\JUMBLED FRAMES RECONSTRUCTION\\jumbled_video.mp4"
 output_directory = "extracted_frames"
 
-if not os.path.exists(output_directory):
-    os.makedirs(output_directory)
-
+try:
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
+except OSError:
+    print("Error while creating output directory");
 cap = cv2.VideoCapture(video_path)
 
 frame_count = 0
@@ -15,16 +17,13 @@ while True:
 
     if not ret:
         break
-
-    # Construct the filename for the current frame
     frame_filename = os.path.join(output_directory, f"frame_{frame_count:04d}.jpg")
 
-    # Save the frame as an image
     cv2.imwrite(frame_filename, frame)
 
     print(f"Frame {frame_count} saved as {frame_filename}")
     frame_count += 1
 
 cap.release()
-cv2.destroyAllWindows()  # Close any OpenCV windows if opened
+cv2.destroyAllWindows() 
 print(f"Successfully extracted {frame_count} frames to {output_directory}")
