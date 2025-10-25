@@ -69,8 +69,8 @@ This produces an efficient near-optimal sequence without brute-force computation
 
 ```mermaid
 flowchart TD
-    A[📥 Input Jumbled Frames] --> B[🔍 Compute SSIM Between Consecutive Frames]
-    B --> C[🧮 Calculate Dissimilarity (1 - SSIM)]
-    C --> D[🚀 Apply Greedy Nearest-Neighbor Ordering]
-    D --> E[🖼️ Reconstructed Frame Sequence]
-    E --> F[🎞️ Combine Frames into Reconstructed Video]
+    A[Input Jumbled Frames] --> B[Compute SSIM Between Consecutive Frames]
+    B --> C[Calculate Dissimilarity (1 - SSIM)]
+    C --> D[Apply Greedy Nearest-Neighbor Ordering]
+    D --> E[Reconstructed Frame Sequence]
+    E --> F[Combine Frames into Reconstructed Video]
