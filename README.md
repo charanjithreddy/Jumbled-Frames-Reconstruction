@@ -63,14 +63,3 @@ This produces an efficient near-optimal sequence without brute-force computation
 - **Efficiency:** Greedy approach scales well for hundreds of frames.  
 - **Flexibility:** Can be extended with advanced feature extractors (ORB/SIFT) or ML models for higher accuracy.
 
----
-
-## 🧭 Algorithm Workflow
-
-```mermaid
-flowchart TD
-    A[Input Jumbled Frames] --> B[Compute SSIM Between Consecutive Frames]
-    B --> C[Calculate Dissimilarity (1 - SSIM)]
-    C --> D[Apply Greedy Nearest-Neighbor Ordering]
-    D --> E[Reconstructed Frame Sequence]
-    E --> F[Combine Frames into Reconstructed Video]
